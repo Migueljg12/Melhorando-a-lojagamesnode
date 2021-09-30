@@ -15,7 +15,7 @@ export default class CartService extends Service {
 
     let stock = async (param1, param2) => { return await service.checkStock(param1, param2) }
 
-    let res = await stock(game.gameInfo, false)
+    let res = await stock(game, false)
 
     //TODO: verificar esse codigo dessa area pois estavamos com muito sono para lembrar o que faltou!!!! TODO:
 
@@ -28,30 +28,29 @@ export default class CartService extends Service {
     const { user, ...rest } = game
     try {
 
-      let newCart = cart.gameInfo.forEach((Array, i) => {
+      for (let i of cart.gameInfo) {
 
-        if (cart.gameInfo[i].gameId.includes(game.gameInfo.gameId) && stock === true) {
+        if (i.gameId === game.gameInfo.gameId && res === true) {
 
-          cart.gameInfo[i].amount += game.gameInfo.amount
+          i.amount += game.gameInfo.amount
 
-          game.gameInfo.amount = cart.gameInfo[i].amount
+          game.gameInfo.amount = i.amount
 
-          return game.gameInfo
+          res = await stock(game, true)
         }
-      })
-      stock(newCart, true)
+      }
 
     } catch (e) {
       throw new Error(e)
     }
 
-    if (stock == true) {
+    if (res == true) {
       const model = this.repository(cart)
       await model.save()
       return model
     }
 
-    if (stock == true) {
+    if (res == true) {
       await this.repository.findOneAndUpdate({ _id: cart._id },
         ({ $push: rest }))
       return this.repository.findOne(_id)

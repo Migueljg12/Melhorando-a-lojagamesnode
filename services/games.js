@@ -66,7 +66,7 @@ export default class GameService extends Service {
 
       } else {
 
-        let { gameId, amount } = filter
+        let { gameId, amount } = filter.gameInfo
 
         let game = await this.repository.findOne({ _id: gameId })
 
@@ -75,7 +75,7 @@ export default class GameService extends Service {
       }
 
     } catch (message) {
-      throw Error(message)
+      throw Error('checkstock', message)
     }
   }
 
