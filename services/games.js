@@ -84,7 +84,7 @@ export default class GameService extends Service {
 
     cart.gameInfo.forEach(array => {
 
-      //  TODO: Testar com value TODO:
+      // TODO: Testar com value TODO:
 
       const gameArray = Object.entries(gameList)
 

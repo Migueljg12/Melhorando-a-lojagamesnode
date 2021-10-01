@@ -17,8 +17,6 @@ export default class CartService extends Service {
 
     let res = await stock(game, false)
 
-    //TODO: verificar esse codigo dessa area pois estavamos com muito sono para lembrar o que faltou!!!! TODO:
-
     if ((cart === null && res === true) || (cart && (cart.payed && res === true))) {
       const model = this.repository(game)
       await model.save()
@@ -37,17 +35,17 @@ export default class CartService extends Service {
           game.gameInfo.amount = i.amount
 
           res = await stock(game, true)
+
+          if (res == true) {
+            const model = this.repository(cart)
+            await model.save()
+            return model
+          }
         }
       }
 
     } catch (e) {
       throw new Error(e)
-    }
-
-    if (res == true) {
-      const model = this.repository(cart)
-      await model.save()
-      return model
     }
 
     if (res == true) {
@@ -82,12 +80,10 @@ export default class CartService extends Service {
     }
   }
 
-  async delGame(cartId, game) {
-    const cart = await this.repository.findOne(cartId)
+  async delGame(params, body) {
+    let cart = await this.repository.findOne(params)
 
-    const index = cart.gameInfo.findIndex(value => value == game)
-    cart.games.splice(index, 1)
-    cart.amount.splice(index, 1)
+    cart.gameInfo = cart.gameInfo.filter(element => element.gameId != body.gameId)
 
     return await cart.save()
   }

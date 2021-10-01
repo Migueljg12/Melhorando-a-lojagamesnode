@@ -94,7 +94,7 @@ router.delete('/delete/game/:_id', auth, async (req, res) => {
   try {
     const { params, body } = req
 
-    const cart = await service.delGame(params, body.games)
+    const cart = await service.delGame(params, body.gameInfo)
 
     res.status(200).json(cart)
 
